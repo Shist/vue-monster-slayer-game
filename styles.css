@@ -19,6 +19,30 @@ header {
   margin-bottom: 2rem;
 }
 
+footer {
+  padding: 2rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+}
+
+a {
+  font-size: 24px;
+  color: white;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+a:hover {
+  color: khaki;
+  transform: scale(1.1);
+}
+
 section {
   width: 90%;
   max-width: 40rem;
