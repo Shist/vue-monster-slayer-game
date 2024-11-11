@@ -9,6 +9,8 @@ Vue.createApp({
       monsterHealth: 100,
       currentRound: 0,
       winner: null,
+      logsList: [],
+      currLogId: 0,
     };
   },
 
@@ -50,6 +52,8 @@ Vue.createApp({
 
       this.decreaseMonsterHealth(damage);
 
+      this.addLogMessage("player", "attack", damage);
+
       this.attackPlayer();
     },
 
@@ -60,11 +64,15 @@ Vue.createApp({
 
       this.decreaseMonsterHealth(damage);
 
+      this.addLogMessage("player", "special-attack", damage);
+
       this.attackPlayer();
     },
 
     attackPlayer() {
       const damage = getRandomValue(8, 15);
+
+      this.addLogMessage("monster", "attack", damage);
 
       this.decreasePlayerHealth(damage);
     },
@@ -80,6 +88,8 @@ Vue.createApp({
         this.playerHealth += healValue;
       }
 
+      this.addLogMessage("player", "heal", healValue);
+
       this.attackPlayer();
     },
 
@@ -92,10 +102,31 @@ Vue.createApp({
       this.monsterHealth = 100;
       this.currentRound = 0;
       this.winner = null;
+      this.logsList = [];
+      this.currLogId = 0;
+    },
+
+    addLogMessage(actionBy, actionType, actionValue) {
+      this.logsList.unshift({
+        id: this.currLogId++,
+        actionBy,
+        actionType,
+        actionValue,
+      });
     },
   },
 
   watch: {
+    currentRound(newRound) {
+      if (newRound) {
+        this.logsList.unshift({
+          id: this.currLogId++,
+          isRoundLog: true,
+          message: `Round #${newRound}`,
+        });
+      }
+    },
+
     playerHealth(playerHealthValue) {
       if (this.monsterHealth === 0 && playerHealthValue === 0) {
         this.winner = "draw";
@@ -109,6 +140,19 @@ Vue.createApp({
         this.winner = "draw";
       } else if (monsterHealthValue === 0) {
         this.winner = "player";
+      }
+    },
+
+    winner(newWinner) {
+      if (newWinner) {
+        this.logsList.unshift({
+          id: this.currLogId++,
+          isOutcomeLog: true,
+          message:
+            newWinner === "draw"
+              ? "The outcome is a draw!"
+              : `The ${newWinner} wins!`,
+        });
       }
     },
   },

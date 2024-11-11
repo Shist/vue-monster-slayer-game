@@ -49,7 +49,37 @@
       </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
-        <ul></ul>
+        <ul>
+          <li v-for="log in logsList" :key="log.id">
+            <span v-if="log.isRoundLog" class="log--round">
+              {{ log.message }}
+            </span>
+            <span v-else-if="log.isOutcomeLog" class="log--outcome">
+              {{ log.message }}
+            </span>
+            <template v-else>
+              <span
+                :class="{'log--player': log.actionBy === 'player', 'log--monster': log.actionBy === 'monster'}"
+              >
+                {{ log.actionBy === 'player' ? 'Player' : 'Monster' }}
+              </span>
+              <span v-if="log.actionType === 'heal'">
+                heals himself for
+                <span class="log--heal">{{ log.actionValue }}</span>
+                health points!
+              </span>
+              <span v-else-if="log.actionType === 'attack'">
+                attacks and deals
+                <span class="log--damage">{{ log.actionValue }}</span> damage!
+              </span>
+              <span v-else>
+                performs special attack and deals
+                <span class="log--special-damage"> {{ log.actionValue }} </span>
+                damage!
+              </span>
+            </template>
+          </li>
+        </ul>
       </section>
     </div>
   </body>
