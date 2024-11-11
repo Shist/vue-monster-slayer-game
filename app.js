@@ -27,16 +27,28 @@ Vue.createApp({
   },
 
   methods: {
-    attackMonster() {
-      this.currentRound++;
+    decreasePlayerHealth(damage) {
+      if (this.playerHealth - damage > 0) {
+        this.playerHealth -= damage;
+      } else {
+        this.playerHealth = 0;
+      }
+    },
 
-      const damage = getRandomValue(5, 12);
-
+    decreaseMonsterHealth(damage) {
       if (this.monsterHealth - damage > 0) {
         this.monsterHealth -= damage;
       } else {
         this.monsterHealth = 0;
       }
+    },
+
+    attackMonster() {
+      this.currentRound++;
+
+      const damage = getRandomValue(5, 12);
+
+      this.decreaseMonsterHealth(damage);
 
       this.attackPlayer();
     },
@@ -46,11 +58,7 @@ Vue.createApp({
 
       const damage = getRandomValue(10, 25);
 
-      if (this.monsterHealth - damage > 0) {
-        this.monsterHealth -= damage;
-      } else {
-        this.monsterHealth = 0;
-      }
+      this.decreaseMonsterHealth(damage);
 
       this.attackPlayer();
     },
@@ -58,11 +66,7 @@ Vue.createApp({
     attackPlayer() {
       const damage = getRandomValue(8, 15);
 
-      if (this.playerHealth - damage > 0) {
-        this.playerHealth -= damage;
-      } else {
-        this.playerHealth = 0;
-      }
+      this.decreasePlayerHealth(damage);
     },
 
     healPlayer() {
@@ -80,9 +84,14 @@ Vue.createApp({
     },
 
     surrender() {
-      this.playerHealth = 0;
+      this.winner = "monster";
+    },
 
-      alert("You lost!");
+    startGame() {
+      this.playerHealth = 100;
+      this.monsterHealth = 100;
+      this.currentRound = 0;
+      this.winner = null;
     },
   },
 
