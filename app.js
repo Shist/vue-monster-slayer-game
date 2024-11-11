@@ -8,6 +8,7 @@ Vue.createApp({
       playerHealth: 100,
       monsterHealth: 100,
       currentRound: 0,
+      winner: null,
     };
   },
 
@@ -76,6 +77,30 @@ Vue.createApp({
       }
 
       this.attackPlayer();
+    },
+
+    surrender() {
+      this.playerHealth = 0;
+
+      alert("You lost!");
+    },
+  },
+
+  watch: {
+    playerHealth(playerHealthValue) {
+      if (this.monsterHealth === 0 && playerHealthValue === 0) {
+        this.winner = "draw";
+      } else if (playerHealthValue === 0) {
+        this.winner = "monster";
+      }
+    },
+
+    monsterHealth(monsterHealthValue) {
+      if (monsterHealthValue === 0 && this.playerHealth === 0) {
+        this.winner = "draw";
+      } else if (monsterHealthValue === 0) {
+        this.winner = "player";
+      }
     },
   },
 }).mount("#game");
