@@ -14,21 +14,43 @@ Vue.createApp({
     };
   },
 
+  computed: {
+    playerHealthBarStyles() {
+      return { width: `${this.playerHealth}%` };
+    },
+
+    monsterHealthBarStyles() {
+      return { width: `${this.monsterHealth}%` };
+    },
+  },
+
   methods: {
     attackMonster() {
-      this.monsterHealth -= getRandomDamage(
+      const damage = getRandomDamage(
         this.minPlayerDamage,
         this.maxPlayerDamage
       );
+
+      if (this.monsterHealth - damage > 0) {
+        this.monsterHealth -= damage;
+      } else {
+        this.monsterHealth = 0;
+      }
 
       this.attackPlayer();
     },
 
     attackPlayer() {
-      this.playerHealth -= getRandomDamage(
-        this.minMonsterDamage,
-        this.maxMonsterDamage
+      const damage = getRandomDamage(
+        this.minPlayerDamage,
+        this.maxPlayerDamage
       );
+
+      if (this.playerHealth - damage > 0) {
+        this.playerHealth -= damage;
+      } else {
+        this.playerHealth = 0;
+      }
     },
   },
 }).mount("#game");
