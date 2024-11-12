@@ -28,6 +28,14 @@
         <div class="healthbar">
           <div class="healthbar__value" :style="playerHealthBarStyles"></div>
         </div>
+        <h3 class="potions-amount-info">
+          <img
+            src="https://img.icons8.com/?size=100&id=f8gzduXnavCH&format=png&color=000000"
+            alt="Icon"
+            class="potion-icon"
+          />
+          <span>Left potions: {{ potionsAmount }}</span>
+        </h3>
       </section>
       <section class="container" v-if="winner">
         <h2>Game Over!</h2>
@@ -44,7 +52,7 @@
         >
           SPECIAL ATTACK
         </button>
-        <button @click="healPlayer">HEAL</button>
+        <button :disabled="isHealingDisabled" @click="healPlayer">HEAL</button>
         <button @click="surrender">SURRENDER</button>
       </section>
       <section id="log" class="container">
@@ -66,16 +74,24 @@
               <span v-if="log.actionType === 'heal'">
                 heals himself for
                 <span class="log--heal">{{ log.actionValue }}</span>
-                health points!
+                health points! <span>Player health: {{ log.healthInfo }}</span>
               </span>
               <span v-else-if="log.actionType === 'attack'">
                 attacks and deals
                 <span class="log--damage">{{ log.actionValue }}</span> damage!
+                <span>
+                  {{log.actionBy === 'player' ? 'Monster' : 'Player' }} health:
+                </span>
+                <span>{{ log.healthInfo }}</span>
               </span>
               <span v-else>
                 performs special attack and deals
                 <span class="log--special-damage"> {{ log.actionValue }} </span>
                 damage!
+                <span>
+                  {{log.actionBy === 'player' ? 'Monster' : 'Player' }} health:
+                </span>
+                <span>{{ log.healthInfo }}</span>
               </span>
             </template>
           </li>

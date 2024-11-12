@@ -6,6 +6,7 @@ Vue.createApp({
   data() {
     return {
       playerHealth: 100,
+      potionsAmount: 5,
       monsterHealth: 100,
       currentRound: 0,
       winner: null,
@@ -25,6 +26,10 @@ Vue.createApp({
 
     isSpecialAttackDisabled() {
       return this.currentRound % 3 !== 0;
+    },
+
+    isHealingDisabled() {
+      return this.playerHealth === 100 || this.potionsAmount === 0;
     },
   },
 
@@ -50,9 +55,13 @@ Vue.createApp({
 
       const damage = getRandomValue(5, 12);
 
+      let healthInfo = `${this.monsterHealth}`;
+
       this.decreaseMonsterHealth(damage);
 
-      this.addLogMessage("player", "attack", damage);
+      healthInfo += ` --> ${this.monsterHealth}`;
+
+      this.addLogMessage("player", "attack", damage, healthInfo);
 
       this.attackPlayer();
     },
@@ -62,9 +71,13 @@ Vue.createApp({
 
       const damage = getRandomValue(10, 25);
 
+      let healthInfo = `${this.monsterHealth}`;
+
       this.decreaseMonsterHealth(damage);
 
-      this.addLogMessage("player", "special-attack", damage);
+      healthInfo += ` --> ${this.monsterHealth}`;
+
+      this.addLogMessage("player", "special-attack", damage, healthInfo);
 
       this.attackPlayer();
     },
@@ -72,15 +85,23 @@ Vue.createApp({
     attackPlayer() {
       const damage = getRandomValue(8, 15);
 
-      this.addLogMessage("monster", "attack", damage);
+      let healthInfo = `${this.playerHealth}`;
 
       this.decreasePlayerHealth(damage);
+
+      healthInfo += ` --> ${this.playerHealth}`;
+
+      this.addLogMessage("monster", "attack", damage, healthInfo);
     },
 
     healPlayer() {
       this.currentRound++;
 
+      this.potionsAmount--;
+
       const healValue = getRandomValue(8, 20);
+
+      let healthInfo = `${this.playerHealth}`;
 
       if (this.playerHealth + healValue > 100) {
         this.playerHealth = 100;
@@ -88,7 +109,9 @@ Vue.createApp({
         this.playerHealth += healValue;
       }
 
-      this.addLogMessage("player", "heal", healValue);
+      healthInfo += ` --> ${this.playerHealth}`;
+
+      this.addLogMessage("player", "heal", healValue, healthInfo);
 
       this.attackPlayer();
     },
@@ -99,6 +122,7 @@ Vue.createApp({
 
     startGame() {
       this.playerHealth = 100;
+      this.potionsAmount = 5;
       this.monsterHealth = 100;
       this.currentRound = 0;
       this.winner = null;
@@ -106,12 +130,13 @@ Vue.createApp({
       this.currLogId = 0;
     },
 
-    addLogMessage(actionBy, actionType, actionValue) {
+    addLogMessage(actionBy, actionType, actionValue, healthInfo) {
       this.logsList.unshift({
         id: this.currLogId++,
         actionBy,
         actionType,
         actionValue,
+        healthInfo,
       });
     },
   },

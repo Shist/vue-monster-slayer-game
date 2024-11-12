@@ -161,3 +161,14 @@ button:disabled {
 .log--heal {
   color: green;
 }
+
+.potions-amount-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.potion-icon {
+  width: 30px;
+  height: 30px;
+}
