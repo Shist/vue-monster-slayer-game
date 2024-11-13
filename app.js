@@ -6,7 +6,7 @@ Vue.createApp({
   data() {
     return {
       playerHealth: 100,
-      potionsAmount: 5,
+      potionsAmount: 3,
       monsterHealth: 100,
       currentRound: 0,
       winner: null,
@@ -122,7 +122,7 @@ Vue.createApp({
 
     startGame() {
       this.playerHealth = 100;
-      this.potionsAmount = 5;
+      this.potionsAmount = 3;
       this.monsterHealth = 100;
       this.currentRound = 0;
       this.winner = null;
